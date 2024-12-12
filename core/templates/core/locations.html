@@ -3,6 +3,9 @@
 
 {% load static %}
 
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'core/locations.css' %}">
+{% endblock %}
 
 {% block content %}
     <div class="hero-section">
@@ -423,6 +426,7 @@
                         });
                     });
                 });
+              
                 function showToast(message, type) {
                     // Create a toast element dynamically
                     const toastContainer = document.querySelector('.toast-container');

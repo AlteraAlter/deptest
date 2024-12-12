@@ -275,15 +275,33 @@ def makeup_artists(request):
 def add_to_cart(request):
     if request.method == "POST":
         try:
+            # Парсим данные из тела запроса
             data = json.loads(request.body)
             location_name = data.get("name")
-            location = Location.objects.get(name=location_name)
+            
+            if not location_name:
+                return JsonResponse({"error": "Location name is required."}, status=400)
+
+            # Пытаемся найти объект Location
+            try:
+                location = Location.objects.get(name=location_name)
+            except Location.DoesNotExist:
+                return JsonResponse({"error": "Location not found."}, status=404)
+            
+            # Получаем текущего пользователя
             user = request.user
+
+            # Добавляем новый элемент в корзину
             Cart.objects.create(location=location, user=user)
 
+            # Возвращаем успешный ответ
             return JsonResponse({"message": "Item added to cart successfully!"})
+        
         except Exception as e:
+            # Логируем ошибку и возвращаем информацию о ней
             return JsonResponse({"error": str(e)}, status=400)
+
+    # Возвращаем ошибку, если метод не POST
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
@@ -386,3 +404,7 @@ def update_status(request):
         except Order.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Order not found'})
 
+def cart_view(request):
+    # Пример использования сессии для хранения количества товаров
+    cart_num = request.session.get('cart_num', 0)  # Берем количество товаров из сессии, если оно есть
+    return render(request, 'cart.html', {'cart_num': cart_num})

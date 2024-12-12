@@ -11,21 +11,14 @@ body {
     color: #333;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Минимальная высота для заполнения экрана */
-    margin: 0; /* Убираем отступы у body */
-    padding-top: 100px; 
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 100px;
     overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
-    margin: 0; /* Remove default body margins */
 }
 
-/* Основной контент */
-.main-content {
-    flex: 1; /* Занимает всё доступное пространство */
-}
 
-/*header */
+/* header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -33,7 +26,7 @@ body {
     padding: 15px 50px;
     background: linear-gradient(to bottom, #e6f2ff, #66c2ff, #3399ff);
     height: 100px;
-    position: fixed; /* Fixes the header to the top of the viewport */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -49,7 +42,6 @@ body {
     font-size: 3.5rem;
     margin-bottom: -25px;
 }
-
 
 nav ul {
     list-style-type: none;
@@ -72,122 +64,103 @@ nav ul li a.active {
     color: black;
     text-decoration: underline;
 }
-
-/* Authentication buttons: LOGIN and SIGNUP */
+/* Основная стилизация */
 .auth-buttons {
     display: flex;
-    gap: 1rem;
-    display: flex;
-    gap: 1rem; /* Add spacing between the cart, profile, and logout button */
-    align-items: center; /* Align items vertically */
-    justify-content: flex-end; /* Keep buttons aligned to the right */
+    gap: 2rem;
+    justify-content: center; /* Центрируем элементы */
+    align-items: center;
+    margin-top: 20px;
 }
 
-.login-btn,
-.signup-btn {
+/* Стили для иконок и текста */
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-decoration: none;
-    padding: 10px 20px; /* Adjust padding for better appearance */
+}
+
+.menu-item a {
+    text-decoration: none;
+    color: #333; /* Черный цвет для текста */
+}
+
+.menu-item i {
+    font-size: 2rem; /* Увеличиваем размер иконок */
+    color: black; /* Черный цвет для иконок */
+    margin-top: 10px;
+    margin-left: 5px;
+}
+.menu-item i:first-child {
+    margin-left: 20px;
+}
+.menu-item p {
+    font-size: 1.2rem; /* Размер текста под иконкой */
+    color: #1a1919; /* Черный текст */
+    margin-left: 7px;
+}
+
+/* Стили кнопок Log Out, Sign In и Sign Up */
+.login-btn,
+.signup-btn,
+.logout-btn {
+    text-decoration: none;
+    padding: 11px 18px;
     font-weight: 400;
     color: white;
     background-color: #2585e6;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border: 2px solid transparent;
-    width: auto; /* Allow the button to resize based on its content */
     text-align: center;
     transition: all 0.3s ease;
-    margin: 0; /* Remove unwanted margins */
-    display: inline-block; /* Ensure proper alignment */
+    display: inline-block;
+    margin-bottom: 20px;
 }
 
-.auth-buttons .signup-btn {
+.signup-btn {
     background-color: white;
     color: #3399ff;
     border-color: #3399ff;
 }
 
-.auth-buttons .login-btn:hover,
-.auth-buttons .signup-btn:hover {
+.login-btn:hover,
+.signup-btn:hover,
+.logout-btn:hover {
     background-color: #0056b3;
     color: white;
     border-color: #0056b3;
 }
 
-/* Search icon */
-.auth-buttons .search-icon {
-    font-size: 1.5rem;
-    color: black;
-    cursor: pointer;
-    padding-bottom: 10px; /* Align search icon closer to the bottom */
+/* Центрируем кнопку Log Out под иконками */
+.logout-btn {
+    margin-top: 5px;
+    margin-left: 20px;
+
 }
-/* Гамбургер-меню */
-.hamburger-menu {
-    display: block;
-    cursor: pointer;
-    z-index: 1000;
+
+.menu-item {
     position: relative;
 }
 
-.hamburger-menu .bar {
-    width: 25px;
-    height: 3px;
-    background-color: #000;
-    margin: 5px 0;
-    transition: 0.3s;
+.cart-num {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: red;
+    color: white;
+    border-radius: 50%; /* Круглая форма */
+    padding: 5px 10px;
+    font-size: 14px;
+    min-width: 24px;
+    text-align: center;
+    line-height: 1.2;
+    display: none; /* Скрыто по умолчанию */
 }
 
-/* Стиль мобильного меню */
-.mobile-menu {
-    display: none;
-    position: fixed;
-    top: 10px;
-    right: 3px;
-    width: 300px;
-    background-color: #59b8f8;
-    border-radius: 10px;
-    color: rgb(7, 6, 6);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 999;
-}
-
-.mobile-menu.show {
-    display: block;
-}
-
-.mobile-menu ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    margin-left: 30px;
-}
-.mobile-menu ul li:first-child{
-    margin-top: 50px;
-}
-.mobile-menu ul li {
-    display: flex;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    margin-bottom: 10px;
-}
-
-.mobile-menu ul li a {
-    text-decoration: none;
-    color: rgb(3, 3, 3);
-    font-size: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Расстояние между иконкой и текстом */
-}
-
-.mobile-menu ul li a:hover {
-    color: #6e6d68;
-}
-
-/* Иконки */
-.mobile-menu ul li a i {
-    font-size: 20px;
+.cart-num.visible {
+    display: block; /* Показывает элемент, если добавлен класс visible */
 }
 
 
@@ -222,6 +195,3 @@ nav ul li a.active {
         font-size: 2rem;
     }
 }
-
-
-

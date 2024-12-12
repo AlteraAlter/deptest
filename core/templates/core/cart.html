@@ -1,108 +1,19 @@
+{% extends 'core/core.html' %}
+{% load custom_filters %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'core/cart.css' %}">
+{% endblock %}
 
-<head>
-    <meta name="csrf-token" content="{{ csrf_token }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Holiday - Home</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="{% static 'core/cart.css' %}">
-    <style>
-        .border-highlight {
-                border: 2px solid #28a745 !important; /* Green border */
-            }
-    </style>
-</head>
+{% block content %}
+    <div class="hero-section">
+        <h2>My Cart</h2>
+    </div>
 
-<body>
-
-    <!-- Navigation bar and header section -->
-    <header class="header">
-        <div class="logo">
-            <h1>Happy Holiday</h1>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="{% url 'home' %}" >Home</a></li>
-                <li><a href="{% url 'location' %}" class="active">Location</a></li>
-                <li><a href="{% url 'suppliers' %}">Services</a></li>
-                <li><a href="{% url 'about_us' %}">About Us</a></li>
-            </ul>
-
-        </nav>
-        <div class="auth-buttons">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'profile' %} " style="font-size: 1.4rem; text-decoration: none; color: #1b1b1b;
-                        margin: 20px 20px">
-                <i class="fa fa-user-circle"></i>
-                Hi, {{ user.username }}
-            </a>
-                    <!-- Hamburger menu button -->
-                    <div class="hamburger-menu" onclick="toggleMenu()">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                    </div>
-                    <!-- Mobile Menu -->
-                    <div class="mobile-menu" id="mobileMenu">
-                        <ul>
-
-                            <li>
-                                <a href="{% url 'cart' %}">
-                                    <i class="fa fa-shopping-cart"></i> My Cart {% if cart_num %} ({{ cart_num }}) {% endif %}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'orders' %}">
-                                    <i class="fa fa-list"></i> My Orders
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'logout' %}">
-                                    <i class="fa fa-sign-out-alt"></i> Log Out
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <a href="{% url 'signin' %}" class="login-btn">Sign in</a>
-                    <a href="{% url 'signup' %}" class="signup-btn">Sign up</a>
-                {% endif %}
-            </div>
-
-            <script>
-                // Function to toggle the mobile menu
-                function toggleMenu() {
-                    const menu = document.getElementById("mobileMenu");
-                    menu.classList.toggle("show");
-                }
-
-                // Close the menu when clicking outside
-                window.addEventListener("click", function (event) {
-                    const menu = document.getElementById("mobileMenu");
-                    const hamburger = document.querySelector(".hamburger-menu");
-                    if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
-                        menu.classList.remove("show");
-                    }
-                });
-            </script>
-    </header>
-
-    <div class="main-content">
-        <div class="hero-section">
-            <h2>My Cart</h2>
-        </div>
-
+    <div class="main-container">
         {% for item in cart %}
-        <div class="custom-container my-5">
+        <div id="cart-{{ forloop.counter }}" class="custom-container my-5">
             <h3>Cart № {{ forloop.counter }}</h3>
             <!-- Order Block -->
             <div class="p-4 border rounded">
@@ -113,23 +24,21 @@
                     <span>Date <span class="text-danger">(Only for 1 day)</span> </span>
                     <span>Price</span>
                 </div>
-        
+
                 <!-- Order Data -->
                 <div class="custom-row custom-data mb-4">
                     <span>{{ item.location.name }}</span>
                     <span>{{ item.location.number_of_guests }} people</span>
                     <span>
-                        <input type="text" id="datePicker" placeholder="Select Date">
+                        <input type="text" id="datePicker-{{ forloop.counter }}" class="date-picker" placeholder="Select Date">
                     </span>
                     <span id="locationPrice">{{ item.location.base_price }} KZT</span>
                 </div>
             </div>
-            
-        
+
             <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
-                    // Получение заблокированных дат с сервера
                     fetch('/blocked-dates/')
                         .then(response => {
                             if (!response.ok) {
@@ -138,20 +47,14 @@
                             return response.json();
                         })
                         .then(blockedDates => {
-                            console.log("Blocked dates from server:", blockedDates);  // Отладка
-                            flatpickr("#datePicker", {
+                            flatpickr(`#datePicker-{{ forloop.counter }}`, {
                                 dateFormat: "Y-m-d",
                                 locale: "en",
-                                minDate: new Date().fp_incr(1), // Начать с завтрашнего дня
-                                disable: blockedDates, // Установка заблокированных дат
+                                minDate: new Date().fp_incr(1),
+                                disable: blockedDates,
                                 onDayCreate: function (dObj, dStr, fp, dayElem) {
-                                    const dateStr = dayElem.dateObj.toISOString().split('T')[0]; // Форматируем дату для сравнения
-                                    console.log(`Checking date: ${dateStr}`); // Отладка
-                                    
-                                    // Проверяем, является ли текущий день заблокированным
+                                    const dateStr = dayElem.dateObj.toISOString().split('T')[0];
                                     if (blockedDates.includes(dateStr)) {
-                                        console.log(`Blocking date: ${dateStr}`);  // Отладка
-                                        // Добавляем кастомный стиль
                                         dayElem.classList.add("blocked-date");
                                     }
                                 }
@@ -159,162 +62,158 @@
                         })
                         .catch(error => console.error('Error fetching blocked dates:', error));
                 });
-            </script>            
-                <!-- Add Services Button -->
-                <div class="text-center mt-3">
-                    <button id="addServicesBtn" class="btn btn-link p-0">+ Add Services</button>
+            </script>
+
+            <!-- Add Services Button -->
+            <div class="text-center mt-3">
+                <button id="addServicesBtn" class="btn btn-link p-0">+ Add Services</button>
+            </div>
+            <div id="servicesList" class="mt-3">
+                <h6>Additional Services:</h6>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Photographer / Videographer
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Decorators
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Menu / Bar
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Choreographers
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Designers
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Venue Planners
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="service-description">
+                            Makeup Artists
+                        </div>
+                        <div class="service-control">
+                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                            <span class="service-quantity">0</span>
+                            <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                        </div>
+                        <span class="service-price" data-base-price="5000">5000 KZT</span>
+                    </li>
+                </ul>
+            </div>   
+
+            <!-- Order Block and Total -->
+            <div class="d-flex justify-content-between align-items-center mt-4 border-top pt-3">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal" data-order-id="{{ item.pk }}">
+                    Order Payment
+                </button>
+                <div class="total-price-name">
+                    <strong>Total:</strong> <span class="totalPrice" data-price="{{ item.location.base_price }}">{{ item.location.base_price }} KZT</span>
                 </div>
-                <div id="servicesList" class="mt-3">
-                    <h6>Additional Services:</h6>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Photographer / Videographer
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Decorators
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Menu / Bar
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Choreographers
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Designers
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Venue Planners
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="service-description">
-                                Makeup Artists
-                            </div>
-                            <div class="service-control">
-                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
-                                <span class="service-quantity">0</span>
-                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
-                            </div>
-                            <span class="service-price" data-base-price="5000">5000 KZT</span>
-                        </li>
-                    </ul>
-                </div>                  
 
-
-                <!-- Order Block and Total -->
-                <div class="d-flex justify-content-end align-items-center mt-4 border-top pt-3">
-
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal" data-order-id="{{ item.pk }}">
-                        Order Payment
-                    </button>
-                    <div class="total-price-name">
-                        <strong>Total:</strong> <span class="totalPrice" data-price="{{ item.location.base_price }}">{{ item.location.base_price }} KZT</span>
-                    </div>
-
-                    <!-- Payment Modal -->
-                    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="paymentModalLabel">Payment Information</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form novalidate>
-                                        <div class="mb-3">
-                                            <label for="cardNumber" class="form-label">Card Number</label>
-                                            <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="1234 5678 9876 5432" pattern="^\d{4} \d{4} \d{4} \d{4}$" maxlength="19" required>
-                                            <div class="invalid-feedback">
-                                                Please enter a valid 16-digit card number (xxxx xxxx xxxx xxxx).
-                                            </div>
+                <!-- Payment Modal -->
+                <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="paymentModalLabel">Payment Information</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form novalidate>
+                                    <div class="mb-3">
+                                        <label for="cardNumber" class="form-label">Card Number</label>
+                                        <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="1234 5678 9876 5432" pattern="^\d{4} \d{4} \d{4} \d{4}$" maxlength="19" required>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid 16-digit card number (xxxx xxxx xxxx xxxx).
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="expiryDate" class="form-label">Expiration Date (MM/YY)</label>
-                                            <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/YY" pattern="^(0[1-9]|1[0-2])\/\d{2}$" maxlength="5" required>
-                                            <div class="inval id-feedback">
-                                                Please enter a valid expiration date (MM/YY).
-                                            </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="expiryDate" class="form-label">Expiration Date (MM/YY)</label>
+                                        <input type="text" class="form-control" id="expiryDate" name="expiryDate" placeholder="MM/YY" pattern="^(0[1-9]|1[0-2])\/\d{2}$" maxlength="5" required>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid expiration date (MM/YY).
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="cvv" class="form-label">CVV</label>
-                                            <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" pattern="^\d{3}$" maxlength="3" required>
-                                            <div class="invalid-feedback">
-                                                Please enter a valid 3-digit CVV.
-                                            </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="cvv" class="form-label">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123" pattern="^\d{3}$" maxlength="3" required>
+                                        <div class="invalid-feedback">
+                                            Please enter a valid 3-digit CVV.
                                         </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-
-                                    <a class="btn btn-primary me-3" id="liveToastBtn" data-order-id="{{ item.location.pk }}" onclick="submitPayment(this)">Order</a>
-                               
-                                    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="width: 150px;">
-                                        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                                            <div class="toast-header">
-                                                <strong class="me-auto">Instant Notify</strong>
-                                                <small>Now</small>
-                                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                                            </div>
-                                            <div class="toast-body">
-                                                Order paid successfully!
-                                            </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-primary me-3" id="liveToastBtn" data-order-id="{{ item.location.pk }}" onclick="submitPayment(this)">Order</a>
+                                <div class="toast-container position-fixed bottom-0 end-0 p-3" style="width: 150px;">
+                                    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                        <div class="toast-header">
+                                            <strong class="me-auto">Instant Notify</strong>
+                                            <small>Now</small>
+                                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                                         </div>
-                                    </div>                                    
+                                        <div class="toast-body">
+                                            Order paid successfully!
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
         </div>
         {% endfor %}
-
     </div>
 
     <footer class="footer">
@@ -386,61 +285,61 @@
 
     // Function to update service quantity and recalculate the total price
     // Function to update service quantity and price
-function updateServiceQuantity(button, change, servicePrice, serviceId) {
-    const quantityElement = button.parentNode.querySelector('.service-quantity');
-    let currentQuantity = parseInt(quantityElement.innerText);
+    function updateServiceQuantity(button, change, servicePrice, serviceId) {
+        const quantityElement = button.parentNode.querySelector('.service-quantity');
+        let currentQuantity = parseInt(quantityElement.innerText);
 
-    // Update quantity
-    currentQuantity += change;
+        // Update quantity
+        currentQuantity += change;
 
-    // Prevent negative values
-    if (currentQuantity < 0) currentQuantity = 0;
+        // Prevent negative values
+        if (currentQuantity < 0) currentQuantity = 0;
 
-    // Update quantity in the UI
-    quantityElement.innerText = currentQuantity;
+        // Update quantity in the UI
+        quantityElement.innerText = currentQuantity;
 
-    // Recalculate service price
-    const priceElement = button.parentNode.parentNode.querySelector('.service-price');
-    const newPrice = servicePrice * currentQuantity;
-    priceElement.innerText = `${newPrice} KZT`;
+        // Recalculate service price
+        const priceElement = button.parentNode.parentNode.querySelector('.service-price');
+        const newPrice = servicePrice * currentQuantity;
+        priceElement.innerText = `${newPrice} KZT`;
 
-    // Highlight the border if quantity is greater than 0 (optional styling)
-    const listItem = button.closest('.list-group-item');
-    if (currentQuantity > 0) {
-        listItem.classList.add('border-highlight'); // Add border highlight class
-    } else {
-        listItem.classList.remove('border-highlight'); // Remove border highlight class
+        // Highlight the border if quantity is greater than 0 (optional styling)
+        const listItem = button.closest('.list-group-item');
+        if (currentQuantity > 0) {
+            listItem.classList.add('border-highlight'); // Add border highlight class
+        } else {
+            listItem.classList.remove('border-highlight'); // Remove border highlight class
+        }
+
+        // Update total price
+        updateTotal();
     }
 
-    // Update total price
-    updateTotal();
-}
+    // Function to recalculate the total price
+    function updateTotal() {
+        let total = 0;
 
-// Function to recalculate the total price
-function updateTotal() {
-    let total = 0;
+        // Add location price (get value from the location price element)
+        const locationPriceElement = document.getElementById('locationPrice');
+        const locationPrice = locationPriceElement ? parseInt(locationPriceElement.innerText) : 0;
+        total += locationPrice;
 
-    // Add location price (get value from the location price element)
-    const locationPriceElement = document.getElementById('locationPrice');
-    const locationPrice = locationPriceElement ? parseInt(locationPriceElement.innerText) : 0;
-    total += locationPrice;
+        // Add price for each service based on quantity
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            const quantity = parseInt(item.querySelector('.service-quantity').innerText) || 0;
+            const servicePrice = parseInt(item.querySelector('.service-price').getAttribute('data-base-price')) || 0;
+            total += quantity * servicePrice;
+        });
 
-    // Add price for each service based on quantity
-    document.querySelectorAll('.list-group-item').forEach(item => {
-        const quantity = parseInt(item.querySelector('.service-quantity').innerText) || 0;
-        const servicePrice = parseInt(item.querySelector('.service-price').getAttribute('data-base-price')) || 0;
-        total += quantity * servicePrice;
-    });
+        // Update the total price in the UI
+        document.querySelector('.totalPrice').innerText = `${total} KZT`;
 
-    // Update the total price in the UI
-    document.querySelector('.totalPrice').innerText = `${total} KZT`;
-
-    // Optionally, store the total price in a hidden input field (for form submission)
-    const totalPriceField = document.getElementById('totalPriceField');
-    if (totalPriceField) {
-        totalPriceField.value = total; // Store in hidden field if needed for form submission
+        // Optionally, store the total price in a hidden input field (for form submission)
+        const totalPriceField = document.getElementById('totalPriceField');
+        if (totalPriceField) {
+            totalPriceField.value = total; // Store in hidden field if needed for form submission
+        }
     }
-}
 
 
     // Submit the payment and send the correct total price to the server
@@ -548,11 +447,5 @@ function updateTotal() {
             let input = event.target;
             input.value = input.value.replace(/\D/g, '').replace(/(\d{2})(\d{0,2})/, '$1/$2').slice(0, 5); // MM/YY
         });
-</script>
-
-
-
-    
-</body>
-
-</html>
+    </script>
+{% endblock %}    
