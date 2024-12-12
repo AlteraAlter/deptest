@@ -42,7 +42,7 @@
 }
 
 .btn-primary {
-    margin-left: 620px;
+    margin-right: 20px;
 }
 
 /* Общие стили для элементов списка */
@@ -148,7 +148,8 @@
     margin-left: 40px;
 }
 
-/* Footer Section */
+
+
 .footer {
     background-color: #333;
     color: white;
@@ -157,11 +158,12 @@
     justify-content: center;
     align-items: center;
     width: 100%; /* Ensures it spans the entire width */
-    position: relative; /* Position footer at the bottom naturally */
+    position: relative; /* Ensures footer stays in normal flow */
     box-sizing: border-box;
-    margin: 0; /* Remove unwanted margins */
+    margin-top: auto;  /* Pushes the footer to the bottom */
 }
 
+/* Rest of your footer styles */
 .footer-content {
     display: flex;
     width: 100%;
@@ -220,6 +222,7 @@ img.icon {
     margin-right: 15px;
 }
 
+
 .border-highlight {
-    border: 2px solid #28a745 !important; /* Green border */
+    border: 2px solid green !important;
 }

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime, date
+from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -152,9 +152,6 @@ def my_orders_view(request):
     return render(request, 'my_orders.html', {'orders': orders})
 
 
-def manager_page(request):
-    return render(request, 'core/manager_home.html', {})
-
 
 def location(request):
     # Get query parameters from the request
@@ -275,33 +272,15 @@ def makeup_artists(request):
 def add_to_cart(request):
     if request.method == "POST":
         try:
-            # Парсим данные из тела запроса
             data = json.loads(request.body)
             location_name = data.get("name")
-            
-            if not location_name:
-                return JsonResponse({"error": "Location name is required."}, status=400)
-
-            # Пытаемся найти объект Location
-            try:
-                location = Location.objects.get(name=location_name)
-            except Location.DoesNotExist:
-                return JsonResponse({"error": "Location not found."}, status=404)
-            
-            # Получаем текущего пользователя
+            location = Location.objects.get(name=location_name)
             user = request.user
-
-            # Добавляем новый элемент в корзину
             Cart.objects.create(location=location, user=user)
 
-            # Возвращаем успешный ответ
             return JsonResponse({"message": "Item added to cart successfully!"})
-        
         except Exception as e:
-            # Логируем ошибку и возвращаем информацию о ней
             return JsonResponse({"error": str(e)}, status=400)
-
-    # Возвращаем ошибку, если метод не POST
     return JsonResponse({"error": "Invalid request method."}, status=405)
 
 
@@ -346,6 +325,7 @@ def after_order(request):
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
+
 def my_orders(request):
     order = Order.objects.filter(user=request.user.id)
     print(order)
@@ -367,6 +347,7 @@ def manager_page(request):
     bookings = Booking.objects.all()
     orders = Order.objects.all()
     bookings = Booking.objects.all()
+    print(bookings)
     return render(request, 'core/manager_home.html', {'bookings': bookings})
 
 
