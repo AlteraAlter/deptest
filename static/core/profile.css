@@ -50,7 +50,7 @@
     margin-top: 100px;
 }
 
-/* Footer Section */
+/* Footer Section - keep it at the bottom */
 .footer {
     background-color: #333;
     color: white;
@@ -59,11 +59,12 @@
     justify-content: center;
     align-items: center;
     width: 100%; /* Ensures it spans the entire width */
-    position: relative; /* Position footer at the bottom naturally */
+    position: relative; /* Ensures footer stays in normal flow */
     box-sizing: border-box;
-    margin: 0; /* Remove any unwanted margins */
+    margin-top: auto;  /* Pushes the footer to the bottom */
 }
 
+/* Rest of your footer styles */
 .footer-content {
     display: flex;
     width: 100%;

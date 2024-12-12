@@ -173,6 +173,57 @@ nav ul li a.active {
     margin-top: 30px;
 }
 
+/* Для активного профиля */
+.menu-item a.active-profile {
+    color: #161514; /* Цвет текста активного элемента */
+}
+
+.menu-item a.active-profile i {
+    font-size: 2.2rem; /* Увеличение иконки */
+    color: #161514;; /* Цвет иконки для активного элемента */
+}
+
+.menu-item a.active-profile p {
+    font-weight: bold; /* Жирный шрифт для активного элемента */
+}
+
+/* Для активной корзины */
+.menu-item a.active-cart {
+    color: #161514;; /* Цвет текста активного элемента */
+}
+
+.menu-item a.active-cart i {
+    font-size: 2.2rem; /* Увеличение иконки */
+    color: #161514;; /* Цвет иконки для активного элемента */
+}
+
+.menu-item a.active-cart p {
+    font-weight: bold; /* Жирный шрифт для активного элемента */
+}
+
+/* Для активных заказов */
+.menu-item a.active-orders {
+    color: #161514;; /* Цвет текста активного элемента */
+}
+
+.menu-item a.active-orders i {
+    font-size: 2.2rem; /* Увеличение иконки */
+    color: #161514;; /* Цвет иконки для активного элемента */
+}
+
+.menu-item a.active-orders p {
+    font-weight: bold; /* Жирный шрифт для активного элемента */
+}
+
+/* Стили для счетчика в корзине */
+.menu-item a.active-cart .cart-num {
+    background-color: red;;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+
 /* Responsive design */
 @media screen and (max-width: 768px) {
     .header {

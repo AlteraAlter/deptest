@@ -95,3 +95,12 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.user.username} booked {self.location.name} at {self.booking_date}"
+    
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user.id)
+    services = []
+    for order in orders:
+        services.append(Service.objects.filter(order=order))
+
+    print(services)
+    return render(request, 'core/my_orders.html', {'orders': orders, 'services': services})

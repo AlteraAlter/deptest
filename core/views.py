@@ -327,10 +327,13 @@ def after_order(request):
 
 
 def my_orders(request):
-    order = Order.objects.filter(user=request.user.id)
-    print(order)
+    orders = Order.objects.filter(user=request.user.id)
+    services = []
+    for order in orders:
+        services.append(Service.objects.filter(order=order))
 
-    return render(request, 'core/my_orders.html', {'orders': order})
+    print(services)
+    return render(request, 'core/my_orders.html', {'orders': orders, 'services': services})
 
 
 def get_blocked_dates(request):

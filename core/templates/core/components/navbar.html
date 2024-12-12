@@ -14,13 +14,13 @@
         {% if user.is_authenticated %}
             <!-- Показать иконки с текстом под ними -->
             <div class="menu-item">
-                <a href="{% url 'profile' %}">
+                <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active-profile{% endif %}">
                     <i class="fa fa-user-circle prof-icon"></i>
                     <p>{{ user.username }}</p>
                 </a>
             </div>
             <div class="menu-item">
-                <a href="{% url 'cart' %}">
+                <a href="{% url 'cart' %}" class="{% if request.resolver_match.url_name == 'cart' %}active-cart{% endif %}">
                     <i class="fa fa-shopping-cart"></i>
                     <p>&nbsp;&nbsp;Cart
                         {% if cart_num %}
@@ -32,12 +32,11 @@
                 </a>
             </div>                                              
             <div class="menu-item">
-                <a href="{% url 'orders' %}">
+                <a href="{% url 'orders' %}" class="{% if request.resolver_match.url_name == 'orders' %}active-orders{% endif %}">
                     <i class="fa fa-list"></i>
                     <p>Orders</p>
                 </a>
             </div>
-    
             <!-- Кнопка Log Out -->
             <a href="{% url 'logout' %}" class="logout-btn">Log Out</a>
         {% else %}
@@ -45,7 +44,7 @@
             <a href="{% url 'signin' %}" class="login-btn">Sign in</a>
             <a href="{% url 'signup' %}" class="signup-btn">Sign up</a>
         {% endif %}
-    </div>
+    </div>    
     <script>
         // Получаем элемент ссылки корзины
         var cartLink = document.querySelector('.menu-item a[href="{% url "cart" %}"]');

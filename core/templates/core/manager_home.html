@@ -25,12 +25,24 @@
                 <li><a href="{% url 'manager' %}" class="active">Home</a></li>
             </ul>
         </nav>
-        <div class="user-options">
-             <a href="{% url "profile" %}"><img src="{% static "core/profile.png" %}" alt="" class='profile-icon'></a>  
-            <a href="{% url 'signin' %}" class="login-btn">Logout</a>
-        </div>
-    </header>
-
+        <div class="auth-buttons">
+            {% if user.is_authenticated %}
+                <!-- Показать иконки с текстом под ними -->
+                <div class="menu-item">
+                    <a href="{% url 'profile' %}" class="{% if request.resolver_match.url_name == 'profile' %}active-profile{% endif %}">
+                        <i class="fa fa-user-circle prof-icon"></i>
+                        <p>{{ user.username }}</p>
+                    </a>
+                </div>
+                                       
+                <!-- Кнопка Log Out -->
+                <a href="{% url 'logout' %}" class="logout-btn">Log Out</a>
+            {% else %}
+                <!-- Кнопки для неавторизованных пользователей -->
+                <a href="{% url 'signin' %}" class="login-btn">Sign in</a>
+                <a href="{% url 'signup' %}" class="signup-btn">Sign up</a>
+            {% endif %}
+        </div>    
     <div class="container mt-5">
         <h1 class="mb-4">Manager Dashboard</h1>
 
@@ -67,6 +79,50 @@
             </tbody>
         </table>
     </div>
+
+    <form method="GET" action="{% url 'location' %}">
+        <div class="filter-section">
+            <!-- Search Box -->
+            <div class="search-box">
+                <input type="text" name="search" class="search-input" placeholder="Search for location..." value="{{ request.GET.search }}">
+                <button type="submit" class="search-icon">
+                    <i class="fa fa-search"></i> <!-- Иконка поиска -->
+                </button>
+            </div>
+    
+            <div class="filter-options">
+                <!-- Location View -->
+                <select class="filter-select location-view" name="location">
+                    <option value="" disabled {% if not request.GET.location %}selected{% endif %}>Select Location View</option>
+                    <option value="SV" {% if request.GET.location == "SV" %}selected{% endif %}>Sea View</option>
+                    <option value="CC" {% if request.GET.location == "CC" %}selected{% endif %}>City Centre</option>
+                    <option value="MV" {% if request.GET.location == "MV" %}selected{% endif %}>Mountain View</option>
+                </select>
+    
+                <!-- Capacity (Number of Guests) -->
+                <select class="filter-select no-of-guests" name="guests">
+                    <option value="" disabled {% if not request.GET.guests %}selected{% endif %}>Select Capacity</option>
+                    <option value="2-6" {% if request.GET.guests == "2-6" %}selected{% endif %}>2 to 6 guests</option>
+                    <option value="7-15" {% if request.GET.guests == "7-15" %}selected{% endif %}>7 to 15 guests</option>
+                    <option value="16-30" {% if request.GET.guests == "16-30" %}selected{% endif %}>16 to 30 guests</option>
+                    <option value="30-50" {% if request.GET.guests == "30-50" %}selected{% endif %}>30 to 50 guests</option>
+                </select>
+    
+                <!-- Date Filter: Closest or Farther -->
+                <select class="filter-select date-filter" name="date_filter">
+                    <option value="" disabled {% if not request.GET.date_filter %}selected{% endif %}>Select Date Option</option>
+                    <option value="closest" {% if request.GET.date_filter == "closest" %}selected{% endif %}>Closest Available</option>
+                    <option value="farther" {% if request.GET.date_filter == "farther" %}selected{% endif %}>Farther Dates</option>
+                </select>
+    
+                <!-- Submit Button -->
+                <button class="filter-search" type="submit">Search</button>
+    
+                <!-- Clear Filters Button -->
+                <a href="{% url 'location' %}" class="clear-filters">Clear Filters</a>
+            </div>
+        </div>
+    </form>
 
     
 
