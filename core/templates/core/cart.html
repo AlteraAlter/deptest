@@ -6,17 +6,114 @@
 <link rel="stylesheet" href="{% static 'core/cart.css' %}">
 {% endblock %}
 
+<<<<<<< HEAD
 {% block content %}
     <div class="hero-section">
         <h2>My Cart</h2>
     </div>
 
     <div class="main-container">
+=======
+<head>
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Holiday - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{% static 'core/cart.css' %}">
+</head>
+
+<body>
+
+    <!-- Navigation bar and header section -->
+    <header class="header">
+        <div class="logo">
+            <h1>Happy Holiday</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}" >Home</a></li>
+                <li><a href="{% url 'location' %}" class="active">Location</a></li>
+                <li><a href="{% url 'suppliers' %}">Services</a></li>
+                <li><a href="{% url 'about_us' %}">About Us</a></li>
+            </ul>
+
+        </nav>
+        <div class="auth-buttons">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %} " style="font-size: 1.4rem; text-decoration: none; color: #1b1b1b;
+                        margin: 20px 20px">
+                <i class="fa fa-user-circle"></i>
+                Hi, {{ user.username }}
+            </a>
+                    <!-- Hamburger menu button -->
+                    <div class="hamburger-menu" onclick="toggleMenu()">
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                        <div class="bar"></div>
+                    </div>
+                    <!-- Mobile Menu -->
+                    <div class="mobile-menu" id="mobileMenu">
+                        <ul>
+
+                            <li>
+                                <a href="{% url 'cart' %}">
+                                    <i class="fa fa-shopping-cart"></i> My Cart {% if cart_num %} ({{ cart_num }}) {% endif %}
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'orders' %}">
+                                    <i class="fa fa-list"></i> My Orders
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'logout' %}">
+                                    <i class="fa fa-sign-out-alt"></i> Log Out
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{% url 'signin' %}" class="login-btn">Sign in</a>
+                    <a href="{% url 'signup' %}" class="signup-btn">Sign up</a>
+                {% endif %}
+            </div>
+
+            <script>
+                // Function to toggle the mobile menu
+                function toggleMenu() {
+                    const menu = document.getElementById("mobileMenu");
+                    menu.classList.toggle("show");
+                }
+
+                // Close the menu when clicking outside
+                window.addEventListener("click", function (event) {
+                    const menu = document.getElementById("mobileMenu");
+                    const hamburger = document.querySelector(".hamburger-menu");
+                    if (!menu.contains(event.target) && !hamburger.contains(event.target)) {
+                        menu.classList.remove("show");
+                    }
+                });
+            </script>
+    </header>
+
+    <div class="main-content">
+        <div class="hero-section">
+            <h2>My Cart</h2>
+        </div>
+
+
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28
         {% for item in cart %}
         <div id="cart-{{ forloop.counter }}" class="custom-container my-5">
             <h3>Cart № {{ forloop.counter }}</h3>
             <!-- Order Block -->
-            <div class="p-4 border rounded">
+            <div class="p-4 border rounded item{{ item.id }}">
                 <!-- Headers -->
                 <div class="custom-row fw-bold mb-2">
                     <span>Location</span>
@@ -30,7 +127,11 @@
                     <span>{{ item.location.name }}</span>
                     <span>{{ item.location.number_of_guests }} people</span>
                     <span>
+<<<<<<< HEAD
                         <input type="text" id="datePicker-{{ forloop.counter }}" class="date-picker" placeholder="Select Date">
+=======
+                        <input type="text" id="datePicker"  placeholder="Select Date">
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28
                     </span>
                     <span id="locationPrice">{{ item.location.base_price }} KZT</span>
                 </div>
@@ -62,6 +163,7 @@
                         })
                         .catch(error => console.error('Error fetching blocked dates:', error));
                 });
+<<<<<<< HEAD
             </script>
 
             <!-- Add Services Button -->
@@ -175,6 +277,123 @@
                                         <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="1234 5678 9876 5432" pattern="^\d{4} \d{4} \d{4} \d{4}$" maxlength="19" required>
                                         <div class="invalid-feedback">
                                             Please enter a valid 16-digit card number (xxxx xxxx xxxx xxxx).
+=======
+            </script>            
+                <!-- Add Services Button -->
+                <div class="text-center mt-3 toggle-services-btn" data-target="servicesList{{ item.id }}">
+                    <button id="addServicesBtn" class="btn btn-link p-0">+ Add Services</button>
+                </div>
+                <div id="servicesList{{ item.id }}" class="mt-3 " style="display: none;">
+                    <h6>Additional Services:</h6>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Photographer / Videographer
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">0 KZT</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Decorators
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">5000 KZT</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Menu / Bar
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">5000 KZT</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Choreographers
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">5000 KZT</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Designers
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">5000 KZT</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Venue Planners
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">5000 KZT</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="service-description">
+                                Makeup Artists
+                            </div>
+                            <div class="service-control">
+                                <button class="btn btn-outline-secondary btn-sm me-2" onclick="updateServiceQuantity(this, -1, 5000)">-</button>
+                                <span class="service-quantity">0</span>
+                                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="updateServiceQuantity(this, 1, 5000)">+</button>
+                            </div>
+                            <span class="service-price" data-base-price="5000">5000 KZT</span>
+                        </li>
+                    </ul>
+                </div>                  
+
+
+                <!-- Order Block and Total -->
+                <div class="d-flex justify-content-end align-items-center mt-4 border-top pt-3">
+
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#paymentModal" data-order-id="{{ item.id }}">
+                        Order Payment
+                    </button>
+                    <div class="total-price-name">
+                        <strong>Total:</strong> <span class="totalPrice" data-price="{{ item.location.base_price }}">{{ item.location.base_price }} KZT</span>
+                    </div>
+
+                    <!-- Payment Modal -->
+                    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="paymentModalLabel">Payment Information</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form novalidate>
+                                        <div class="mb-3">
+                                            <label for="cardNumber" class="form-label">Card Number</label>
+                                            <input type="text" class="form-control" id="cardNumber" name="cardNumber" placeholder="1234 5678 9876 5432" pattern="^\d{4} \d{4} \d{4} \d{4}$" maxlength="19" required>
+                                            <div class="invalid-feedback">
+                                                Please enter a valid 16-digit card number (xxxx xxxx xxxx xxxx).
+                                            </div>
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -190,6 +409,7 @@
                                         <div class="invalid-feedback">
                                             Please enter a valid 3-digit CVV.
                                         </div>
+<<<<<<< HEAD
                                     </div>
                                 </form>
                             </div>
@@ -214,6 +434,35 @@
             </div>
         </div>
         {% endfor %}
+=======
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+
+                                    <button class="btn btn-primary me-3" id="liveToastBtn" data-order-id="{{ item.pk }}" data-location-id="{{ item.location.pk }}" onclick="submitPayment(this)">Order</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                                    <div class="toast-container position-fixed top-0 end-0 p-3" style="width: 150px;">
+                                        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                                            <div class="toast-header">
+                                                <strong class="me-auto">Instant Notify</strong>
+                                                <small>Now</small>
+                                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                                            </div>
+                                            <div class="toast-body">
+                                                Order paid successfully!
+                                            </div>
+                                        </div>
+                                    </div>
+
+        </div>
+        {% endfor %}
+
+
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28
     </div>
 
     <footer class="footer">
@@ -251,24 +500,21 @@
     </footer>
 
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // Function to toggle the visibility of the services list
-    document.getElementById('addServicesBtn').addEventListener('click', function () {
-        const servicesList = document.getElementById('servicesList');
-        const isHidden = window.getComputedStyle(servicesList).display === 'none';
+        // Function to toggle the visibility of the services list
+        document.querySelectorAll('.toggle-services-btn').forEach(function(button) {
+             button.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target'); // Unique id from data attribute
+                const servicesList = document.getElementById(targetId); // Get the unique element
 
-        // Toggle visibility of the services list
-        if (isHidden) {
-            servicesList.classList.add('show'); // Show the services list
-        } else {
-            servicesList.classList.remove('show'); // Hide the services list
-        }
+                // Check if the element exists
+                if (servicesList) {
+                    const isHidden = servicesList.style.display === 'none' || !servicesList.style.display;
 
-        // Update button text based on the list's visibility
-        this.innerText = isHidden ? '- Hide Services' : '+ Add Services';
-    });
+                    // Toggle visibility using inline styles
+                    servicesList.style.display = isHidden ? 'block' : 'none';
 
+<<<<<<< HEAD
     // Function to expand a service and show additional options
     function toggleServiceDetails(serviceId) {
         const details = document.getElementById(`details-${serviceId}`);
@@ -380,72 +626,195 @@
                     setTimeout(() => {
                         window.location.href = '/my_orders/';  // Redirect to the orders page
                     }, 2000);
+=======
+                    // Update button text based on the list's visibility
+                    this.innerText = isHidden ? '- Hide Services' : '+ Add Services';
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28
                 } else {
-                    showPaymentErrorNotification();  // Show error notification
+                    console.error(`Element with id ${targetId} not found.`);
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showPaymentErrorNotification();  // Show error notification on failure
             });
-        } else {
-            form.classList.add('was-validated');
-        }
-    }
-
-    // Get selected services and their quantities
-    function getSelectedServices() {
-        const services = [];
-        document.querySelectorAll('.list-group-item').forEach(item => {
-            const serviceName = item.querySelector('.service-description').innerText;
-            const quantity = parseInt(item.querySelector('.service-quantity').innerText) || 0;
-            if (quantity > 0) {
-                services.push({
-                    name: serviceName,
-                    quantity: quantity,
-                    price: parseInt(item.querySelector('.service-price').getAttribute('data-base-price')) || 0
-                });
-            }
         });
-        return services;
-    }
 
-    // Notification Functions
-    function showPaymentSuccessNotification(totalPrice) {
-        const toastContainer = document.querySelector('.toast-container');
-        const toast = new bootstrap.Toast(toastContainer);
-        const toastMessage = toastContainer.querySelector('.toast-body');
-        toastMessage.innerHTML = `Payment of ${totalPrice} KZT was successfully completed!`;
-        toast.show();
-    }
-
-    function showPaymentErrorNotification() {
-        const toastContainer = document.querySelector('.toast-container');
-        const toast = new bootstrap.Toast(toastContainer);
-        const toastMessage = toastContainer.querySelector('.toast-body');
-        toastMessage.innerHTML = 'There was an error processing your payment. Please try again.';
-        toast.show();
-    }
-
-    function showPaymentProcessingNotification(totalPrice) {
-        const toastContainer = document.querySelector('.toast-container');
-        const toast = new bootstrap.Toast(toastContainer);
-        const toastMessage = toastContainer.querySelector('.toast-body');
-        toastMessage.innerHTML = `Processing payment of ${totalPrice} KZT...`;
-        toast.show();
-    }
+        // Function to expand a service and show additional options
+        function toggleServiceDetails(serviceId) {
+            const details = document.getElementById(`details-${serviceId}`);
+            const expandButton = document.getElementById(`expand-${serviceId}`);
+            if (details.style.display === 'none' || details.style.display === '') {
+                details.style.display = 'block';
+                expandButton.innerText = 'Hide Options';
+            } else {
+                details.style.display = 'none';
+                expandButton.innerText = 'Show More';
+            }
+        }
 
 
-            // Форматирование номера карты (ввод с пробелами)
-            document.getElementById('cardNumber').addEventListener('input', function (event) {
+        // Function to update service quantity and recalculate the total price
+        // Function to update service quantity and price
+        function updateServiceQuantity(button, change, servicePrice) {
+            const cartContainer = button.closest('.list-group');
+            const quantityElement = button.parentNode.querySelector('.service-quantity');
+            let currentQuantity = parseInt(quantityElement.innerText);
+
+            // Update quantity
+            currentQuantity += change;
+
+            // Prevent negative values
+            if (currentQuantity < 0) currentQuantity = 0;
+
+            // Update quantity in the UI
+            quantityElement.innerText = currentQuantity;
+
+            // Recalculate service price
+            const priceElement = button.parentNode.parentNode.querySelector('.service-price');
+            const newPrice = currentQuantity === 0 ? servicePrice : servicePrice * currentQuantity; // Retain base price if 0
+            priceElement.innerText = `${newPrice} KZT`;
+
+            // Highlight the border if quantity is greater than 0
+            const listItem = button.closest('.list-group-item');
+            if (currentQuantity > 0) {
+                listItem.classList.add('border-highlight');
+            } else {
+                listItem.classList.remove('border-highlight');
+            }
+            console.log(cartContainer)
+            // Update the total price only for this cart
+            updateTotal(cartContainer);
+        }
+
+        // Function to recalculate the total price
+        function updateTotal(cartContainer) {
+            const totalPriceElement = cartContainer.parentNode.parentNode.querySelector('.totalPrice');
+
+            let[num, currency] = totalPriceElement.innerText.split(" ");
+            let total = parseInt(num);
+
+            // Add price for each service based on quantity
+            cartContainer.querySelectorAll('.list-group-item').forEach(item => {
+                const quantity = parseInt(item.querySelector('.service-quantity').innerText) || 0;
+                const servicePrice = parseInt(item.querySelector('.service-price').getAttribute('data-base-price')) || 0;
+                total += quantity * servicePrice;
+            });
+
+            // Update the total price in the UI for the specific cart
+
+            totalPriceElement.innerText = `${total} KZT`;
+
+            // Optionally, store the total price in a hidden input field
+
+        }
+
+
+
+        // Submit the payment and send the correct total price to the server
+        function submitPayment(element) {
+            const orderId = element.getAttribute('data-order-id'); // Get order ID
+            const locationId = element.getAttribute('data-location-id');
+            const totalPrice = document.querySelector('.totalPrice').innerHTML; // Get the updated total price
+            const container = document.querySelector(`.item${orderId}`);
+            const datePicker = container ? container.querySelector('#datePicker') : null; // Note: class `datePicker` used
+            const date = datePicker ? datePicker.value : null;
+
+
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const form = document.querySelector('form');  // Get the form for validation
+
+            if (form.checkValidity()) {
+                // Close the modal window
+                const myModal = new bootstrap.Modal(document.getElementById('paymentModal'));
+                myModal.hide();
+
+                // Show payment processing notification
+                showPaymentProcessingNotification(totalPrice);
+                console.log(`Price from func: ${totalPrice}`);
+                console.log((`From directly html: ${document.querySelector('.totalPrice').innerHTML}`));
+
+                // Send data to the server
+                fetch('/after_order/', {
+
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                    },
+                    body: JSON.stringify({
+                        totalPrice: totalPrice,
+                        locationId: locationId,  // Send the unique order ID
+                        date: date,
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+
+                            alert(`Payment of ${totalPrice} KZT was successfully completed!`); // Show success notification
+                            setTimeout(() => {
+                                window.location.href = '/my_orders/';  // Redirect to the orders page
+                             }, 500);
+                        } else {
+                            alert()  // Show error notification
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showPaymentErrorNotification();  // Show error notification on failure
+                    });
+            } else {
+                form.classList.add('was-validated');
+            }
+        }
+
+        // Notification Functions
+        function showPaymentSuccessNotification(totalPrice) {
+            const toastContainer = document.querySelector('.toast-container');
+            console.log(toastContainer);
+            const toast = new bootstrap.Toast(toastContainer);
+            const toastMessage = toastContainer.querySelector('.toast-body');
+            toastMessage.innerHTML = `Payment of ${totalPrice} KZT was successfully completed!`;
+            console.log(toastContainer);
+
+            toast.show();
+        }
+
+        function showPaymentErrorNotification() {
+            const toastContainer = document.querySelector('.toast-container');
+            const toast = new bootstrap.Toast(toastContainer);
+            const toastMessage = toastContainer.querySelector('.toast-body');
+            toastMessage.innerHTML = 'There was an error processing your payment. Please try again.';
+            toast.show();
+        }
+
+        function showPaymentProcessingNotification(totalPrice) {
+            const toastContainer = document.querySelector('.toast-container');
+            const toast = new bootstrap.Toast(toastContainer);
+            const toastMessage = toastContainer.querySelector('.toast-body');
+            toastMessage.innerHTML = `Processing payment of ${totalPrice} KZT...`;
+            toast.show();
+        }
+
+
+        // Форматирование номера карты (ввод с пробелами)
+        document.getElementById('cardNumber').addEventListener('input', function (event) {
             let input = event.target;
             input.value = input.value.replace(/\D/g, '').replace(/(.{4})(?=\d)/g, '$1 ').trim();
         });
-    
+
         // Форматирование даты истечения срока действия карты (MM/YY)
         document.getElementById('expiryDate').addEventListener('input', function (event) {
             let input = event.target;
             input.value = input.value.replace(/\D/g, '').replace(/(\d{2})(\d{0,2})/, '$1/$2').slice(0, 5); // MM/YY
         });
+<<<<<<< HEAD
     </script>
 {% endblock %}    
+=======
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    
+</body>
+
+</html>
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28

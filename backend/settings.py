@@ -79,8 +79,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'db',
+    #     'USER': 'root',
+    #     'PASSWORD': 'altera69',
+    #     'HOST': 'localhost',
+    #     'PORT': '3306',
+    # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+<<<<<<< HEAD
         'NAME': 'soft1',
         'USER': 'root',
         'PASSWORD': 'Nurila_2004',
@@ -107,8 +116,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'db',
+=======
+        'NAME': 'happy_holiday_db',
+>>>>>>> 33c29c050680726b5f8fe736eb4939fc024e7d28
         'USER': 'root',
-        'PASSWORD': 'altera69',
+        'PASSWORD': 'narutoshippuden45',
         'HOST': 'localhost',
         'PORT': '3306',
     }
