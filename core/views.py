@@ -19,7 +19,7 @@ from django.contrib.auth.tokens import default_token_generator
 
 from django.core.mail import send_mail
 from .models import Page, Cart
-from .models import Order
+from .models import Order, Service
 from .models import Location, Booking
 from django.shortcuts import get_object_or_404
 from .forms import OrderForm
